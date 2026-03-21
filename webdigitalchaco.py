@@ -1,96 +1,76 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
-# 1. CONFIGURACIÓN DE LA PÁGINA (Debe ser la primera instrucción)
+# --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
-    page_title="Web Digital Chaco | Portal Pro",
-    page_icon="🚀",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    page_title="LU1GAS-10 | Monitor de Radio",
+    page_icon="📡",
+    layout="wide"
 )
 
-# 2. ESTILO CSS PERSONALIZADO (Para que se vea como una App profesional)
+# --- ESTILO TIPO CONSOLA DE RADIO ---
 st.markdown("""
     <style>
-    /* Fondo de la aplicación */
-    .stApp {
-        background-color: #f0f2f6;
+    .stApp { background-color: #0e1117; color: #ffffff; }
+    .callsign-header {
+        background-color: #1f2937;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid #ff4b4b;
+        text-align: center;
     }
-    
-    /* Estilo general para todos los botones de enlace */
-    div.stButton > button, div.stLinkButton > a {
-        width: 100% !important;
-        border-radius: 12px !important;
-        height: 4em !important;
-        line-height: 2.5em !important;
-        font-weight: bold !important;
-        text-decoration: none !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        border: none !important;
-        transition: 0.3s;
-    }
-
-    /* Colores específicos para cada botón para que resalten */
-    /* Botón IPTV (Azul) */
-    div.col1-style a {
-        background-color: #007bff !important;
-        color: white !important;
-    }
-    
-    /* Botón Juegos (Verde) */
-    div.col2-style a {
-        background-color: #28a745 !important;
-        color: white !important;
-    }
-    
-    /* Botón Gestión (Naranja) */
-    div.col3-style a {
-        background-color: #fd7e14 !important;
-        color: white !important;
+    .metric-card {
+        background-color: #262730;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #464855;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- CABECERA ---
-st.title("🌐 Portal Web Digital Chaco")
-st.markdown("#### Central de Proyectos y Soluciones Tecnológicas")
+# --- CABECERA OFICIAL ---
+st.markdown('<div class="callsign-header">', unsafe_allow_html=True)
+st.title("📟 Estación LU1GAS - Juan Carlos")
+st.write("📍 Resistencia, Chaco, Argentina | Altura: 54m | Nodo: LU1GAS-10")
+st.markdown('</div>', unsafe_allow_html=True)
 st.write("---")
 
-# --- SECCIÓN DE PROYECTOS (Organizado en columnas) ---
-col1, col2, col3 = st.columns(3)
+# --- MONITOR DE PROPAGACIÓN Y ESTACIONES ---
+col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.markdown('<div class="col1-style">', unsafe_allow_html=True)
-    st.header("📺 Streaming")
-    st.info("Accede a las señales de Argentina y la región Nordeste.")
-    # REEMPLAZA CON TU URL REAL DE IPTV
-    st.link_button("ACCEDER A IPTV CHACO", "https://tu-url-iptv.streamlit.app")
+    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+    st.subheader("☀️ Propagación HF/VHF")
+    # Widget de propagación externa
+    st.image("https://www.hamqsl.com/solar101vhf.php", caption="Estado de las Bandas en Tiempo Real")
+    
+    st.write("---")
+    st.subheader("🕵️ Ver Estaciones en el Aire")
+    st.info("Consulta quiénes están activos en la zona:")
+    
+    # Botón para buscar estaciones cercanas a tu ubicación
+    st.link_button("📻 Estaciones cerca de Resistencia", 
+                  "https://aprs.fi/#!addr=Resistencia%2C%20Chaco%2C%20Argentina")
+    
+    st.link_button("📋 Listado de Tráfico Reciente", 
+                  "https://aprs.fi/info/a/LU1GAS-10")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col2:
-    st.markdown('<div class="col2-style">', unsafe_allow_html=True)
-    st.header("🎮 Juegos")
-    st.success("Desafíos familiares: RED FAMILIAR Championship.")
-    # REEMPLAZA CON TU URL REAL DE JUEGOS
-    st.link_button("¡A JUGAR AHORA!", "https://juego-adivinanzas-familia.streamlit.app")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.subheader("📍 Radar APRS Regional")
+    # Mapa interactivo centrado en tu área de influencia
+    # A 54 metros, verás estaciones de Corrientes, Formosa y norte de Santa Fe
+    components.iframe("https://aprs.fi/#!addr=Resistencia%2C%20Chaco%2C%20Argentina", height=600)
 
-with col3:
-    st.markdown('<div class="col3-style">', unsafe_allow_html=True)
-    st.header("📊 Gestión")
-    st.warning("Sistema de logística para Distribuidora Chaco.")
-    # REEMPLAZA CON TU URL REAL DE DISTRIBUIDORA
-    st.link_button("SISTEMA DE LOGÍSTICA", "https://distribuidora-chaco.streamlit.app")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# --- SECCIÓN INFERIOR / INFORMACIÓN ---
+# --- SECCIÓN DE EQUIPOS ---
 st.write("---")
-with st.expander("ℹ️ Información del Desarrollador"):
-    st.write("""
-    Este portal centraliza las herramientas digitales desarrolladas en Python. 
-    Optimizado para acceso rápido desde dispositivos móviles y gestión en tiempo real.
-    """)
+expander = st.expander("🛠️ Configuración Técnica de la Estación")
+expander.write(f"""
+- **Transmisores:** Yaesu FT-1900 (VHF) / Yaesu FT-5DR (Digital C4FM)
+- **Antena:** Ringo VHF en balcón (54 metros de altura)
+- **iGate:** Puente ESP32 conectado a Notebook via USB-Serial
+- **Red:** Conectado a Servidores APRS-IS Tier 2
+""")
 
 # --- PIE DE PÁGINA ---
-st.caption("© 2026 Web Digital Chaco | Resistencia, Chaco, Argentina")
+st.caption("© 2026 Web Digital Chaco | 73's Cordiales de LU1GAS Juan Carlos")
